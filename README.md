@@ -5,4 +5,5 @@ Original plugin can be found here: [ai-code-review](https://gerrit.googlesource.
 
 To download the appropriate release, please visit the [GitHub releases](../../releases) page for this repository, or clone directly from the appropriate tag.
 
-N.B Default "master" branch is only an empty placeholder.
+N.B Default "fork-information" branch is only a placeholder for this README.md so it can be used as the default landing page without impacting the history 
+or other changes from the open source fork it is based on. 
