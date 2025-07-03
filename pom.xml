@@ -7,13 +7,10 @@
     <groupId>com.googlesource.gerrit.plugins</groupId>
     <artifactId>ai-code-review</artifactId>
     <packaging>jar</packaging>
-    <version>4.0.0</version>
+    <version>3.9.0-RPv1</version>
     <properties>
         <Gerrit-ApiType>plugin</Gerrit-ApiType>
-        <!-- Default the gerrit-api version to the lowest version that uses JDK17 by default, the same as this project.
-        because we can't run on JDK11, but equally we wish to support as many gerrit versions for this plugin as possible, this doesn't mean this wont run
-         on later versions, it just allows it to be backward compatible back to this min version ( unless we actually need to use a feature from a later API spec -->
-        <Gerrit-ApiVersion>3.7.9</Gerrit-ApiVersion>
+        <Gerrit-ApiVersion>3.9.7</Gerrit-ApiVersion>
         <maven.test.skip>false</maven.test.skip>
     </properties>
     <build>
@@ -25,15 +22,14 @@
                 <configuration>
                     <archive>
                         <manifestEntries>
+                            <!-- Note as this is a shaded jar also make any changes here, below, in shade
+                            plugin section -->
                             <Gerrit-PluginName>ai-code-review</Gerrit-PluginName>
                             <Gerrit-Module>com.googlesource.gerrit.plugins.aicodereview.Module</Gerrit-Module>
-
                             <Implementation-Vendor>OpenSource Gerrit Plugin</Implementation-Vendor>
                             <Implementation-URL>https://gerrit.googlesource.com/plugins/ai-code-review</Implementation-URL>
-
                             <Implementation-Title>AI Code Review Gerrit Plugin</Implementation-Title>
-                            <Implementation-Version>${project.version}</Implementation-Version>
-
+                            <Implementation-Version>v${project.version}</Implementation-Version>
                             <Gerrit-ApiType>${Gerrit-ApiType}</Gerrit-ApiType>
                             <Gerrit-ApiVersion>${Gerrit-ApiVersion}</Gerrit-ApiVersion>
                         </manifestEntries>
@@ -106,13 +102,26 @@
                                         <Implementation-Vendor>OpenSource Gerrit Plugin</Implementation-Vendor>
                                         <Implementation-URL>https://gerrit.googlesource.com/plugins/ai-code-review</Implementation-URL>
                                         <Implementation-Title>AI Code Review Gerrit Plugin</Implementation-Title>
-                                        <Implementation-Version>${project.version}</Implementation-Version>
+                                        <Implementation-Version>v${project.version}</Implementation-Version>
                                         <Gerrit-ApiType>${Gerrit-ApiType}</Gerrit-ApiType>
                                         <Gerrit-ApiVersion>${Gerrit-ApiVersion}</Gerrit-ApiVersion>
                                     </manifestEntries>
                                 </transformer>
                             </transformers>
                         </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>com.spotify.fmt</groupId>
+                <artifactId>fmt-maven-plugin</artifactId>
+                <version>2.25</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>format</goal>
+                        </goals>
                     </execution>
                 </executions>
             </plugin>
@@ -170,7 +179,7 @@
         <dependency>
             <groupId>com.github.tomakehurst</groupId>
             <artifactId>wiremock-standalone</artifactId>
-            <version>2.27.2</version>
+            <version>3.0.1</version>
             <scope>test</scope>
         </dependency>
         <dependency>

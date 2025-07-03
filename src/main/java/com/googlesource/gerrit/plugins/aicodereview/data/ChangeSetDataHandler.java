@@ -46,11 +46,11 @@ public class ChangeSetDataHandler {
           gerritClient.getPermittedVotingRange(change);
       if (permittedVotingRange != null) {
         if (permittedVotingRange.getMin() > config.getVotingMinScore()) {
-          log.debug("Minimum ChatGPT voting score set to {}", permittedVotingRange.getMin());
+          log.debug("Minimum AIChat voting score set to {}", permittedVotingRange.getMin());
           changeSetData.setVotingMinScore(permittedVotingRange.getMin());
         }
         if (permittedVotingRange.getMax() < config.getVotingMaxScore()) {
-          log.debug("Maximum ChatGPT voting score set to {}", permittedVotingRange.getMax());
+          log.debug("Maximum AIChat voting score set to {}", permittedVotingRange.getMax());
           changeSetData.setVotingMaxScore(permittedVotingRange.getMax());
         }
       }

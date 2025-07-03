@@ -1,0 +1,3 @@
+---
+features:
+  - Added ability 'reviewFromAllInstances' which allows a single large installation of OLLAMA to be used for specific use cases.

@@ -50,7 +50,7 @@ public class PatchSetReviewer {
   private final GerritClient gerritClient;
   private final ChangeSetData changeSetData;
   private final Provider<GerritClientReview> clientReviewProvider;
-  @Getter private final ChatAIClient chatGptClient;
+  @Getter private final ChatAIClient chatAIClient;
   private final Localizer localizer;
   private final DebugCodeBlocksReview debugCodeBlocksReview;
 
@@ -65,13 +65,13 @@ public class PatchSetReviewer {
       Configuration config,
       ChangeSetData changeSetData,
       Provider<GerritClientReview> clientReviewProvider,
-      ChatAIClient chatGptClient,
+      ChatAIClient chatAIClient,
       Localizer localizer) {
     this.config = config;
     this.gerritClient = gerritClient;
     this.changeSetData = changeSetData;
     this.clientReviewProvider = clientReviewProvider;
-    this.chatGptClient = chatGptClient;
+    this.chatAIClient = chatAIClient;
     this.localizer = localizer;
     debugCodeBlocksReview = new DebugCodeBlocksReview(localizer);
   }
@@ -90,7 +90,7 @@ public class PatchSetReviewer {
 
     if (changeSetData.shouldRequestAICodeReview()) {
       AIChatResponseContent reviewReply = getReviewReply(change, patchSet);
-      log.debug("ChatGPT response: {}", reviewReply);
+      log.debug("AIChat response: {}", reviewReply);
 
       retrieveReviewBatches(reviewReply, change);
     }
@@ -169,7 +169,7 @@ public class PatchSetReviewer {
       return new AIChatResponseContent(String.format(SPLIT_REVIEW_MSG, config.getMaxReviewLines()));
     }
 
-    return chatGptClient.ask(changeSetData, change, patchSet);
+    return chatAIClient.ask(changeSetData, change, patchSet);
   }
 
   private Integer getReviewScore(GerritChange change) {

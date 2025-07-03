@@ -21,6 +21,7 @@ import com.googlesource.gerrit.plugins.aicodereview.mode.common.client.api.gerri
 import com.googlesource.gerrit.plugins.aicodereview.mode.common.model.data.ChangeSetData;
 import com.googlesource.gerrit.plugins.aicodereview.mode.stateful.client.api.chatgpt.ChatGptAssistant;
 import com.googlesource.gerrit.plugins.aicodereview.mode.stateful.client.api.git.GitRepoFiles;
+import com.googlesource.gerrit.plugins.aicodereview.settings.Settings;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -51,9 +52,16 @@ public class EventHandlerTypeChangeMerged implements IEventHandlerType {
 
   @Override
   public void processEvent() {
-    // TODO: Should we be firing assistant based stateful request items when the aiMode is
-    // stateless?
-    // This is extra paid for requests which aren't required if using GPT.
+    // No vector store is setup or used in OLLAMA currently, but also if the review mode is
+    // stateless
+    // then the vectorstore and ChatGPT assistant will never be used.
+    // For now simply protect against only stateful requests performing this update.
+    if (config.getAIMode() == Settings.Modes.stateless) {
+      log.info(
+          "Ignoring ChangeMergedEvent for stateless configurations, as no vector store is required.");
+      return;
+    }
+
     ChatGptAssistant chatGptAssistant =
         new ChatGptAssistant(
             config, changeSetData, change, gitRepoFiles, pluginDataHandlerProvider);

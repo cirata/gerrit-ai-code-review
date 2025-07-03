@@ -22,18 +22,17 @@ import com.google.gerrit.server.account.AccountCache;
 import com.google.gerrit.server.util.ManualRequestContext;
 import com.google.inject.Inject;
 import com.googlesource.gerrit.plugins.aicodereview.config.Configuration;
-import com.googlesource.gerrit.plugins.aicodereview.interfaces.mode.common.client.api.gerrit.GerritClientPatchSet;
+import com.googlesource.gerrit.plugins.aicodereview.interfaces.mode.common.client.api.gerrit.GerritClientPatchSetInfo;
 import com.googlesource.gerrit.plugins.aicodereview.mode.common.client.api.gerrit.GerritChange;
+import com.googlesource.gerrit.plugins.aicodereview.mode.common.client.api.gerrit.GerritClientPatchSet;
 import com.googlesource.gerrit.plugins.aicodereview.mode.common.model.data.ChangeSetData;
 import java.util.List;
 import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class GerritClientPatchSetStateless
-    extends com.googlesource.gerrit.plugins.aicodereview.mode.common.client.api.gerrit
-        .GerritClientPatchSet
-    implements GerritClientPatchSet {
+public class GerritClientPatchSetStateless extends GerritClientPatchSet
+    implements GerritClientPatchSetInfo {
   @VisibleForTesting
   @Inject
   public GerritClientPatchSetStateless(Configuration config, AccountCache accountCache) {

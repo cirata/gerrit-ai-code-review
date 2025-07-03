@@ -12,19 +12,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package com.googlesource.gerrit.plugins.aicodereview.mode.stateless.model.api.chatgpt;
+package com.googlesource.gerrit.plugins.aicodereview.mode.common.model.api.openai;
 
 import com.google.gson.annotations.SerializedName;
-import com.googlesource.gerrit.plugins.aicodereview.mode.common.model.api.openai.AIChatRequestMessage;
-import com.googlesource.gerrit.plugins.aicodereview.mode.common.model.api.openai.AIChatTool;
-import com.googlesource.gerrit.plugins.aicodereview.mode.common.model.api.openai.AIChatToolChoice;
 import java.util.List;
 import lombok.Builder;
 import lombok.Data;
 
 @Data
 @Builder
-public class ChatGptCompletionRequest {
+public class AIChatCompletionRequest {
   private String model;
   private boolean stream;
   private double temperature;

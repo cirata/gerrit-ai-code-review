@@ -1,0 +1,3 @@
+---
+issues:
+  - For interactions between plugins and the use of gerrit.instanceId please refer to the Cirata Gerrit MultiSite documentation:'https://docs.cirata.com/gerrit/3.9/release.html#_ger_2347_conflicting_setting_in_the_its_jira_configuration'. 

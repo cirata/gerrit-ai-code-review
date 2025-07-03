@@ -39,7 +39,7 @@ import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class AIChatGptPrompt {
+public class AIChatPrompt {
   // Reply attributes
   public static final String ATTRIBUTE_ID = "id";
   public static final String ATTRIBUTE_REPLY = "reply";
@@ -77,11 +77,11 @@ public class AIChatGptPrompt {
 
   @Setter protected boolean isCommentEvent;
 
-  public AIChatGptPrompt(Configuration config) {
+  public AIChatPrompt(Configuration config) {
     this(config, false);
   }
 
-  public AIChatGptPrompt(Configuration config, boolean isCommentEvent) {
+  public AIChatPrompt(Configuration config, boolean isCommentEvent) {
     this.config = config;
     this.isCommentEvent = isCommentEvent;
     // Avoid repeated loading of prompt constants
@@ -109,7 +109,7 @@ public class AIChatGptPrompt {
 
   protected void loadDefaultPrompts(String promptFilename) {
     String promptFile = String.format("config/%s.json", promptFilename);
-    Class<? extends AIChatGptPrompt> me = this.getClass();
+    Class<? extends AIChatPrompt> me = this.getClass();
     try (InputStreamReader reader = FileUtils.getInputStreamReader(promptFile)) {
       Map<String, Object> values =
           getGson().fromJson(reader, new TypeToken<Map<String, Object>>() {}.getType());

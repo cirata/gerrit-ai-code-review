@@ -37,7 +37,7 @@ public class AIChatDataPrompt {
       GerritClientData gerritClientData,
       Localizer localizer) {
     aiChatDataPromptHandler =
-        AIChatPromptFactory.getChatGptDataPrompt(
+        AIChatPromptFactory.getChatDataPrompt(
             config, changeSetData, change, gerritClientData, localizer);
   }
 

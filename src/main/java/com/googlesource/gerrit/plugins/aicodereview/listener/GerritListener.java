@@ -20,6 +20,7 @@ import com.google.gerrit.common.Nullable;
 import com.google.gerrit.entities.Change;
 import com.google.gerrit.entities.Project;
 import com.google.gerrit.server.config.GerritInstanceId;
+import com.google.gerrit.server.config.PluginConfig;
 import com.google.gerrit.server.events.Event;
 import com.google.gerrit.server.events.EventListener;
 import com.google.gerrit.server.events.PatchSetEvent;
@@ -48,10 +49,28 @@ public class GerritListener implements EventListener {
 
   @Override
   public void onEvent(Event event) {
-    if (!Objects.equals(event.instanceId, myInstanceId)) {
-      log.debug("Ignore event from another instance");
-      return;
+
+    // great we have replication info, check what configuration we have, do we fire
+    // everywhere, or just on the originator instance / site.
+    PluginConfig pluginConfig = configCreator.getPluginGlobalConfig();
+    // Default review at all sites to false, it is an override only used to override
+    // normal MultiSite use case.
+    boolean reviewFromAllInstances = pluginConfig.getBoolean("reviewFromAllInstances", false);
+
+    // If we aren't told to review at all sites, which is the default behaviour,
+    // check if we have matching instanceId so we know to process at this matching site.
+    // This is the default behaviour if there is no instanceId present also as it is
+    // a single site installation.
+    if (!reviewFromAllInstances) {
+      if (!Objects.equals(event.instanceId, myInstanceId)) {
+        log.debug(
+            "Ignore event from another instance myInstanceId {}, event instanceId {}",
+            myInstanceId,
+            event.instanceId);
+        return;
+      }
     }
+
     if (!EVENT_CLASS_MAP.containsValue(event.getClass())) {
       log.debug("The event {} is not managed by the plugin", event);
       return;

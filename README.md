@@ -1,18 +1,30 @@
-# AI Code Review Gerrit Plugin
+# AI Code Review - Gerrit MultiSite Plugin
 
 ## Starting Point
-This plugin has been based on the initial chatGPT plugin available on github: [chatgpt-code-review-gerrit-plugin](https://github.com/amarula/chatgpt-code-review-gerrit-plugin/)
+This plugin is a fork of the community ai-code-review project: [plugins/ai-code-review](https://gerrit-review.googlesource.com/admin/repos/plugins/ai-code-review)
 
-A full history of the previous plugin is in the branch: gerrithub-chatgpt-code-review/main.
+A full history of the previous plugin can be found within its README.md
 
-The requirement of the updated plugin was to abstract the chatGPT specific nature of the plugin and to provide a more
-generic naming point, and set of configuration and API naming that used the openAPI specification that is
-common between chatGPT and other private AI service providers.
+The requirement of this fork was to build upon the abstracted nature of the ai-code-review plugin, which works
+against different AI Services, and make it able to be used in a Gerrit MultiSite environment where the repository content
+is spread across different locations and potentially regions.  Product support extends to covering this plugin when used in
+combination with the Cirata Gerrit MultiSite product.
+
+
+
+### Multiple Site Installation Options
+- The default installation of this plugin is to have multiple site awareness, such that this plugin may be installed at different sites,
+  while only running the code review once, at the originator site. ( The site that received the review. )
+- As a secondary option it is possible to install this plugin at a central location, and have it perform the AI review only at this location
+  even though it may not have received the original content / push. This installation may be used where companies have a single large AI service,
+  and they wish to use the node closest to that AI Service.
+- This plugin maybe be installed on default gerrit single site installation.
+
 
 ## Features
 
 This plugin allows you to use different AI Chat services, e.g. ChatGPT or OLLAMA for code review in Gerrit conveniently.
-After submitting a Patch Set, OpenAI will provide review feedback in the form of comments and, optionally, a vote.
+After submitting a Patch Set, AI Service will provide review feedback in the form of comments and, optionally, a vote.
 You can continue to ask the AI Chat by @{gerritUserName} or @{gerritEmailAddress} (provided that `gerritEmailAddress` is in
 the form "gerritUserName@<any_email_domain>") in the comments to further guide it in generating more targeted review
 comments.
@@ -21,7 +33,7 @@ the plugin.
 
 ## Getting Started
 
-1. **Build:** Requires JDK 11 or higher, Maven 3.0 or higher.
+1. **Build:** Requires JDK 17 or higher, Maven 3.6.x or higher.
 
    ```bash
    mvn -U clean package
@@ -281,6 +293,17 @@ when configuration settings change or Changes are merged.
 - `enabledProjects`: The default value is an empty string. If globalEnable is set to false, the plugin will only run in
   the repositories specified here. The value should be a comma-separated list of repository names, for example:
   "project1,project2,project3".
+- `reviewFromAllInstances`:  Allows the use of a single larger scale installation of a local AI service such as OLLAMA
+  at a central node and have only it perform the operations even though the review or comments were received from another Gerrit instance.   
+  This option is only applicable in a multiple site installation - see [Multiple site configuration](#-multiple-site-installation-global-configuration).
+
+#### Multiple site installation global configuration
+The settings below are only required when you have more than a single instance of Gerrit in a
+multiple site configuration.
+- `gerrit.instanceId`: In order for AI requests to only be invoked from the site that originally received the review information,
+  and therefore avoid duplicate requests being made by the other replica sites, the global GerritInstanceId property must be set to a
+  unique value at each instance's gerrit.config.
+  
 
 #### Optional Parameters for Project Configuration only
 

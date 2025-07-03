@@ -29,7 +29,7 @@ public class AIChatTools {
         FileUtils.getInputStreamReader("config/formatRepliesTool.json")) {
       tools = getGson().fromJson(reader, AIChatTool.class);
     } catch (IOException e) {
-      throw new RuntimeException("Failed to load data for ChatGPT `format_replies` tool", e);
+      throw new RuntimeException("Failed to load data for AIChat `format_replies` tool", e);
     }
     return tools;
   }
@@ -40,7 +40,7 @@ public class AIChatTools {
         FileUtils.getInputStreamReader("config/formatRepliesToolChoice.json")) {
       toolChoice = getGson().fromJson(reader, AIChatToolChoice.class);
     } catch (IOException e) {
-      throw new RuntimeException("Failed to load data for ChatGPT `format_replies` tool choice", e);
+      throw new RuntimeException("Failed to load data for AIChat `format_replies` tool choice", e);
     }
     return toolChoice;
   }

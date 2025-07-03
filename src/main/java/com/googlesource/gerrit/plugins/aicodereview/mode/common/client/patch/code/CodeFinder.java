@@ -164,7 +164,7 @@ public class CodeFinder {
               .endCharacter(endCharacter)
               .build();
       // If multiple commented code portions are found and currentCommentRange is closer to the line
-      // number suggested by ChatGPT than closestCommentRange, it becomes the new
+      // number suggested by AIChat than closestCommentRange, it becomes the new
       // closestCommentRange
       if (closestCodeRange == null
           || calcCodeDistance(currentCodeRange, commentedLine)

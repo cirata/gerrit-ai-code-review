@@ -20,14 +20,14 @@ import static com.googlesource.gerrit.plugins.aicodereview.utils.TextUtils.joinW
 import com.googlesource.gerrit.plugins.aicodereview.config.Configuration;
 import com.googlesource.gerrit.plugins.aicodereview.interfaces.mode.stateful.client.prompt.ChatGptPromptStateful;
 import com.googlesource.gerrit.plugins.aicodereview.mode.common.client.api.gerrit.GerritChange;
-import com.googlesource.gerrit.plugins.aicodereview.mode.common.client.prompt.AIChatGptPrompt;
+import com.googlesource.gerrit.plugins.aicodereview.mode.common.client.prompt.AIChatPrompt;
 import com.googlesource.gerrit.plugins.aicodereview.mode.common.model.data.ChangeSetData;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public abstract class AIChatGptPromptStatefulBase extends AIChatGptPrompt
+public abstract class AIChatGptPromptStatefulBase extends AIChatPrompt
     implements ChatGptPromptStateful {
   public static String DEFAULT_AI_CHAT_ASSISTANT_NAME;
   public static String DEFAULT_AI_CHAT_ASSISTANT_DESCRIPTION;

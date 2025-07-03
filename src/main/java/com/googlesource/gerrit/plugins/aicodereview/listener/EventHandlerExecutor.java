@@ -40,7 +40,7 @@ public class EventHandlerExecutor {
     this.injector = injector;
     int maximumPoolSize =
         pluginConfigFactory.getFromGerritConfig(pluginName).getInt("maximumPoolSize", 2);
-    this.executor = workQueue.createQueue(maximumPoolSize, "ChatGPT request executor");
+    this.executor = workQueue.createQueue(maximumPoolSize, pluginName + " request executor");
   }
 
   public void execute(Configuration config, Event event) {

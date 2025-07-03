@@ -19,7 +19,7 @@ import com.googlesource.gerrit.plugins.aicodereview.mode.common.client.patch.dif
 import com.googlesource.gerrit.plugins.aicodereview.mode.common.model.data.ChangeSetData;
 import java.util.HashMap;
 
-public interface GerritClientPatchSet {
+public interface GerritClientPatchSetInfo {
   String getPatchSet(ChangeSetData changeSetData, GerritChange gerritChange) throws Exception;
 
   boolean isDisabledUser(String authorUsername);

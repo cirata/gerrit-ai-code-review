@@ -27,13 +27,13 @@ import com.googlesource.gerrit.plugins.aicodereview.mode.common.client.api.opena
 import com.googlesource.gerrit.plugins.aicodereview.mode.common.client.api.openai.AIChatParameters;
 import com.googlesource.gerrit.plugins.aicodereview.mode.common.client.api.openai.AIChatTools;
 import com.googlesource.gerrit.plugins.aicodereview.mode.common.client.http.HttpClientWithRetry;
+import com.googlesource.gerrit.plugins.aicodereview.mode.common.model.api.openai.AIChatCompletionRequest;
 import com.googlesource.gerrit.plugins.aicodereview.mode.common.model.api.openai.AIChatRequestMessage;
 import com.googlesource.gerrit.plugins.aicodereview.mode.common.model.api.openai.AIChatResponseContent;
 import com.googlesource.gerrit.plugins.aicodereview.mode.common.model.api.openai.AIChatTool;
 import com.googlesource.gerrit.plugins.aicodereview.mode.common.model.data.ChangeSetData;
 import com.googlesource.gerrit.plugins.aicodereview.mode.stateless.client.api.UriResourceLocatorStateless;
 import com.googlesource.gerrit.plugins.aicodereview.mode.stateless.client.prompt.AIChatPromptStateless;
-import com.googlesource.gerrit.plugins.aicodereview.mode.stateless.model.api.chatgpt.ChatGptCompletionRequest;
 import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpRequest;
@@ -54,6 +54,7 @@ public class AIChatClientStateless extends AIChatClient implements ChatAIClient 
   @Inject
   public AIChatClientStateless(Configuration config) {
     super(config);
+    httpClientWithRetry.setEnableMessageDebugging(config.getEnableMessageDebugging());
   }
 
   public AIChatResponseContent ask(
@@ -61,19 +62,17 @@ public class AIChatClientStateless extends AIChatClient implements ChatAIClient 
     isCommentEvent = change.getIsCommentEvent();
     String changeId = change.getFullChangeId();
     log.info(
-        "Processing STATELESS ChatGPT Request with changeId: {}, Patch Set: {}",
-        changeId,
-        patchSet);
+        "Processing STATELESS AIChat Request with changeId: {}, Patch Set: {}", changeId, patchSet);
     for (int attemptInd = 0; attemptInd < REVIEW_ATTEMPT_LIMIT; attemptInd++) {
       HttpRequest request = createRequest(config, changeSetData, patchSet);
-      log.debug("ChatGPT request: {}", request.toString());
+      log.debug("AIChat request: {}", request.toString());
 
       HttpResponse<String> response = httpClientWithRetry.execute(request);
 
       String body = response.body();
-      log.debug("ChatGPT response body: {}", body);
+      log.debug("Chat response body: {}", body);
       if (body == null) {
-        throw new IOException("ChatGPT response body is null");
+        throw new IOException("AIChat response body is null");
       }
 
       AIChatResponseContent contentExtracted = extractContent(config, body);
@@ -81,7 +80,7 @@ public class AIChatClientStateless extends AIChatClient implements ChatAIClient 
         return contentExtracted;
       }
     }
-    throw new RuntimeException("Failed to receive valid ChatGPT response");
+    throw new RuntimeException("Failed to receive valid AIChat response");
   }
 
   protected HttpRequest createRequest(
@@ -122,8 +121,8 @@ public class AIChatClientStateless extends AIChatClient implements ChatAIClient 
 
     AIChatParameters AIChatParameters = new AIChatParameters(config, isCommentEvent);
     AIChatTool[] tools = new AIChatTool[] {AIChatTools.retrieveFormatRepliesTool()};
-    ChatGptCompletionRequest chatGptCompletionRequest =
-        ChatGptCompletionRequest.builder()
+    AIChatCompletionRequest chatGptCompletionRequest =
+        AIChatCompletionRequest.builder()
             .model(config.getAIModel())
             .messages(List.of(systemMessage, userMessage))
             .temperature(AIChatParameters.getGptTemperature())

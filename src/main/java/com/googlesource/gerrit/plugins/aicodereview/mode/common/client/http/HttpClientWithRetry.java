@@ -36,7 +36,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class HttpClientWithRetry {
   private final Retryer<HttpResponse<String>> retryer;
-
+  private boolean enableMessageDebugging;
   private final HttpClient httpClient =
       HttpClient.newBuilder().connectTimeout(Duration.ofMinutes(5)).build();
 
@@ -47,7 +47,21 @@ public class HttpClientWithRetry {
           @Override
           public <V> void onRetry(Attempt<V> attempt) {
             if (attempt.hasException()) {
-              log.error("Retry failed with exception: " + attempt.getExceptionCause());
+              if (getEnableMessageDebugging()) {
+                // Log the error with the full stack information, not just the friendly message.
+                // As this is within a retry loop, we dont want to do this unless someone is tracing
+                // issues.
+                log.error(
+                    "Retry attempt: {} failed with exception.",
+                    attempt.getAttemptNumber(),
+                    attempt.getExceptionCause());
+                return;
+              }
+              // otherwise, log the one line simple cause message ( note: not the full throwable! )
+              log.error(
+                  "Retry attempt: {} failed with exception {}",
+                  attempt.getAttemptNumber(),
+                  attempt.getExceptionCause().toString());
             }
           }
         };
@@ -70,6 +84,15 @@ public class HttpClientWithRetry {
             .withStopStrategy(StopStrategies.stopAfterAttempt(5))
             .withRetryListener(listener)
             .build();
+    enableMessageDebugging = false;
+  }
+
+  public boolean getEnableMessageDebugging() {
+    return enableMessageDebugging;
+  }
+
+  public void setEnableMessageDebugging(boolean enableMessageDebugging) {
+    this.enableMessageDebugging = enableMessageDebugging;
   }
 
   public HttpResponse<String> execute(HttpRequest request)

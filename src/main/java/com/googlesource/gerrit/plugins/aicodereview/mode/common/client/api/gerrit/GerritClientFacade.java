@@ -17,7 +17,7 @@ package com.googlesource.gerrit.plugins.aicodereview.mode.common.client.api.gerr
 import com.google.common.annotations.VisibleForTesting;
 import com.google.inject.Inject;
 import com.googlesource.gerrit.plugins.aicodereview.config.Configuration;
-import com.googlesource.gerrit.plugins.aicodereview.interfaces.mode.common.client.api.gerrit.GerritClientPatchSet;
+import com.googlesource.gerrit.plugins.aicodereview.interfaces.mode.common.client.api.gerrit.GerritClientPatchSetInfo;
 import com.googlesource.gerrit.plugins.aicodereview.mode.common.client.patch.diff.FileDiffProcessed;
 import com.googlesource.gerrit.plugins.aicodereview.mode.common.model.api.gerrit.GerritPermittedVotingRange;
 import com.googlesource.gerrit.plugins.aicodereview.mode.common.model.data.ChangeSetData;
@@ -30,7 +30,7 @@ public class GerritClientFacade {
   private final ChangeSetData changeSetData;
   private final GerritClientDetail gerritClientDetail;
   private final GerritClientComments gerritClientComments;
-  private final GerritClientPatchSet gerritClientPatchSet;
+  private final GerritClientPatchSetInfo gerritClientPatchSetInfo;
 
   @VisibleForTesting
   @Inject
@@ -38,9 +38,9 @@ public class GerritClientFacade {
       Configuration config,
       ChangeSetData changeSetData,
       GerritClientComments gerritClientComments,
-      GerritClientPatchSet gerritClientPatchSet) {
+      GerritClientPatchSetInfo gerritClientPatchSetInfo) {
     gerritClientDetail = new GerritClientDetail(config, changeSetData);
-    this.gerritClientPatchSet = gerritClientPatchSet;
+    this.gerritClientPatchSetInfo = gerritClientPatchSetInfo;
     this.changeSetData = changeSetData;
     this.gerritClientComments = gerritClientComments;
   }
@@ -50,15 +50,15 @@ public class GerritClientFacade {
   }
 
   public String getPatchSet(GerritChange change) throws Exception {
-    return gerritClientPatchSet.getPatchSet(changeSetData, change);
+    return gerritClientPatchSetInfo.getPatchSet(changeSetData, change);
   }
 
   public boolean isDisabledUser(String authorUsername) {
-    return gerritClientPatchSet.isDisabledUser(authorUsername);
+    return gerritClientPatchSetInfo.isDisabledUser(authorUsername);
   }
 
   public boolean isDisabledTopic(String topic) {
-    return gerritClientPatchSet.isDisabledTopic(topic);
+    return gerritClientPatchSetInfo.isDisabledTopic(topic);
   }
 
   public boolean isWorkInProgress(GerritChange change) {
@@ -66,11 +66,11 @@ public class GerritClientFacade {
   }
 
   public HashMap<String, FileDiffProcessed> getFileDiffsProcessed() {
-    return gerritClientPatchSet.getFileDiffsProcessed();
+    return gerritClientPatchSetInfo.getFileDiffsProcessed();
   }
 
   public Integer getNotNullAccountId(String authorUsername) {
-    return gerritClientPatchSet.getNotNullAccountId(authorUsername);
+    return gerritClientPatchSetInfo.getNotNullAccountId(authorUsername);
   }
 
   public boolean retrieveLastComments(GerritChange change) {
@@ -79,14 +79,14 @@ public class GerritClientFacade {
 
   public void retrievePatchSetInfo(GerritChange change) {
     gerritClientComments.retrieveAllComments(change);
-    gerritClientPatchSet.retrieveRevisionBase(change);
+    gerritClientPatchSetInfo.retrieveRevisionBase(change);
   }
 
   public GerritClientData getClientData(GerritChange change) {
     return new GerritClientData(
-        gerritClientPatchSet.getFileDiffsProcessed(),
+        gerritClientPatchSetInfo.getFileDiffsProcessed(),
         gerritClientDetail.getMessages(change),
         gerritClientComments.getCommentData(),
-        gerritClientPatchSet.getRevisionBase());
+        gerritClientPatchSetInfo.getRevisionBase());
   }
 }

@@ -42,7 +42,7 @@ public class AIChatPromptFactory {
     }
   }
 
-  public static ChatAIDataPrompt getChatGptDataPrompt(
+  public static ChatAIDataPrompt getChatDataPrompt(
       Configuration config,
       ChangeSetData changeSetData,
       GerritChange change,

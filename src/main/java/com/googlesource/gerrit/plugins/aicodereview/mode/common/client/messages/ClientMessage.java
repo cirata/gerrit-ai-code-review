@@ -61,7 +61,7 @@ public class ClientMessage extends ClientBase {
     Matcher userMatcher = botMentionPattern.matcher(message);
     if (!userMatcher.find()) {
       log.debug(
-          "Skipping action since the comment does not mention the ChatGPT bot."
+          "Skipping action since the comment does not mention the AIChat bot."
               + " Expected bot name in comment: {}, Actual comment text: {}",
           config.getGerritUserName(),
           message);

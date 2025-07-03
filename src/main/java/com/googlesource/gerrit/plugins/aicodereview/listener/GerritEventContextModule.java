@@ -23,9 +23,9 @@ import com.googlesource.gerrit.plugins.aicodereview.config.Configuration;
 import com.googlesource.gerrit.plugins.aicodereview.data.ChangeSetDataProvider;
 import com.googlesource.gerrit.plugins.aicodereview.data.PluginDataHandler;
 import com.googlesource.gerrit.plugins.aicodereview.data.PluginDataHandlerProvider;
+import com.googlesource.gerrit.plugins.aicodereview.interfaces.mode.common.client.api.gerrit.GerritClientPatchSetInfo;
 import com.googlesource.gerrit.plugins.aicodereview.interfaces.mode.common.client.api.openapi.ChatAIClient;
 import com.googlesource.gerrit.plugins.aicodereview.mode.common.client.api.gerrit.GerritChange;
-import com.googlesource.gerrit.plugins.aicodereview.mode.common.client.api.gerrit.GerritClientPatchSet;
 import com.googlesource.gerrit.plugins.aicodereview.mode.common.model.data.ChangeSetData;
 import com.googlesource.gerrit.plugins.aicodereview.mode.stateful.client.api.chatai.AIChatClientStateful;
 import com.googlesource.gerrit.plugins.aicodereview.mode.stateful.client.api.gerrit.GerritClientPatchSetStateful;
@@ -44,7 +44,7 @@ public class GerritEventContextModule extends FactoryModule {
   @Override
   protected void configure() {
     bind(ChatAIClient.class).to(getChatAIMode());
-    bind(GerritClientPatchSet.class).to(getClientPatchSet());
+    bind(GerritClientPatchSetInfo.class).to(getClientPatchSet());
 
     bind(Configuration.class).toInstance(config);
     bind(GerritChange.class).toInstance(new GerritChange(event));
@@ -59,7 +59,7 @@ public class GerritEventContextModule extends FactoryModule {
     };
   }
 
-  private Class<? extends GerritClientPatchSet> getClientPatchSet() {
+  private Class<? extends GerritClientPatchSetInfo> getClientPatchSet() {
     return switch (config.getAIMode()) {
       case stateful -> GerritClientPatchSetStateful.class;
       case stateless -> GerritClientPatchSetStateless.class;

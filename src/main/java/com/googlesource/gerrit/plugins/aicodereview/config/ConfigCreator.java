@@ -102,6 +102,11 @@ public class ConfigCreator {
     return new Configuration(context, gerritApi, globalConfig, projectConfig, email, accountId);
   }
 
+  public PluginConfig getPluginGlobalConfig() {
+    // return the global configuration for this plugin.
+    return configFactory.getFromGerritConfig(pluginName);
+  }
+
   private Optional<AccountState> getAccount(PluginConfig globalConfig) {
     String codeReviewUser = globalConfig.getString(Configuration.KEY_GERRIT_USERNAME);
     return accountCache.getByUsername(codeReviewUser);

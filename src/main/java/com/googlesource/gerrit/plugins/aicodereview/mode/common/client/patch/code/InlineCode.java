@@ -86,7 +86,7 @@ public class InlineCode {
     try {
       line = newContent.get(line_num);
     } catch (IndexOutOfBoundsException e) {
-      // If the line number returned by ChatGPT exceeds the actual number of lines, return the last
+      // If the line number returned by AIChat exceeds the actual number of lines, return the last
       // line
       int lastLine = newContent.size() - 1;
       if (line_num > lastLine) {
