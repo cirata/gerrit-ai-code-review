@@ -7,3 +7,6 @@ To download the appropriate release, please visit the [GitHub releases](../../re
 
 N.B Default "fork-information" branch is only a placeholder for this README.md so it can be used as the default landing page without impacting the history 
 or other changes from the open source fork it is based on. 
+
+## Cirata Gerrit MultiSite
+For more information on the Cirata Gerrit MultiSite product, and related documentation see: [Cirata Gerrit MultiSite](https://cirata.com/devops/solutions/gerrit).
